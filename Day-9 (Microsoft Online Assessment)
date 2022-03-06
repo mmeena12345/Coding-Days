@@ -1,0 +1,97 @@
+Question 1. Minimum Modifications
+
+Array of N integers arranged in non-decreasing sequence. You can perform two operations
+a) remove an element
+b) add an element
+Return the minimum operations required such that each element X, appears exactly X times in the array
+
+Example
+
+Input = [1, 1, 3, 4, 4, 4]
+Output:  3
+ Explanation: 
+1. You can remove the 3, array becomes 1, 1, 4, 4, 4
+2. You can remove 1, array becomes 1, 4, 4, 4
+3. You can add 4, array becomes 1, 4, 4, 4, 4
+Thus 1 appears 1 time, and 4 appears 4 times, in 3 operations. 
+
+Soln:-
+
+public static int moves(int[] data){
+  int minOp=0;
+  for(int i=0,j=0;i<data.length;i=j){
+    while(j<data.length && data[i]==data[j]) j++;
+    int freq = j-i;
+    minOp+=Math.min(Math.abs(data[i]-freq),freq);
+  }
+  return minOp;
+}
+
+2.) Robot Room Cleaner
+There is a cleaning robot which is cleaning a rectangular grid of size Nx M, represented by array R consisting of N strings. Rows are numbered from 0 to N-1 (from top to bottom) and columns are numbered from 0 to M-1 (from left to right).
+
+The robot starts cleaning in the top-left corner, facing rightwards. It moves in a straight line for as long as it can, i.e. while there is an unoccupied grid square ahead of it. When it cannot move forward, it rotates 90 degrees clockwise and tries to move forward again until it encounters another obstacle, and so on. Dots in the array (".") represent empty squares and 'x's represent occupied squares (ones the robot cannot move through). Each square that the robot occupied at least once is considered clean. The robot moves indefinitely.
+
+Write a function:
+
+int solution (vector &R);
+
+that, given an array R consisting of N strings, each of length M, representing the grid, returns the number of clean squares.
+
+Examples:
+
+Given A = [...X..","..XX","..X..."], your function should return 6.
+
+Soln:-
+
+class Codechef
+{
+    static HashMap<String,Boolean>visited = new HashMap<String,Boolean>();
+    static HashSet<String>res=new HashSet<String>();
+    
+    public static void dfs(int i,int j,int dir,String[] grid){
+        int n = grid.length;
+        int m = grid[0].length();
+        
+        if(i==n || i==-1 || j==m || j==-1){
+            if(i==n) dfs(i-1,j,2,grid);
+            else if(i==-1) dfs(i+1,j,0,grid);
+            else if(j==m) dfs(i,j-1,1,grid);
+            else if(j==-1) dfs(i,j+1,3,grid);
+            return;
+        }
+        
+        String key = ""+i+"_"+j+"_"+dir;
+        if(visited.containsKey(key)){
+            return;
+        }
+        
+        visited.put(key,true);
+        if(grid[i].charAt(j)!='X'){
+            String k = ""+i+"_"+j;
+            res.add(k);
+            if(dir==0) dfs(i,j+1,0,grid);
+            else if(dir==1) dfs(i+1,j,1,grid);
+            else if(dir==2) dfs(i,j-1,2,grid);
+            else if(dir==3) dfs(i-1,j,3,grid);
+        }else{
+            if(dir==0) dfs(i,j-1,1,grid);
+            else if(dir==1) dfs(i-1,j,2,grid);
+            else if(dir==2) dfs(i,j+1,3,grid);
+            else if(dir==3) dfs(i+1,j,0,grid);
+        }
+        return;
+    } 
+    
+    public static int solve(String[] grid){
+        dfs(0,0,0,grid);
+        return res.size();
+    }
+    
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		// your code goes here
+		String[] ar = {"...X..","....XX","..X..."};
+		System.out.println(solve(ar));
+	}
+}
