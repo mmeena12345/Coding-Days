@@ -1,0 +1,104 @@
+Q1.) Minimum steps required to convert a binary number to zero
+Given a decimal number, how many minimum possible steps are required to convert this to zero provided:-
+
+-> Change the bit i if the next bit i+1 is '1' and all the other bits i+2 and later are 0
+-> Change the last bit without restriction
+
+For example:
+
+if input is (8)Base10 = (1000)Base2, then the steps taken are:
+1000→1001→1011→1010→1110→1111→1101→1100→0100→0101→0111→0110→0010→0011→0001→0000
+
+Soln:
+class Codechef
+{
+    public static String getBinary(int n){
+        String s = "";
+        while(n>0){
+            s=s+n%2;
+            n=n/2;
+        }
+        return s;
+    }
+    
+    public static double solve(int numb){
+        String bin = getBinary(numb);
+        int n = bin.length();
+        double acc = 0;
+        double sign = 1;
+        for(int i=0;i<n;i++){
+            double num = bin.charAt(i)-'0';
+            double pow = num>0?num*Math.pow(2,i):0;
+            double step = num*(2*pow-1);
+            
+            acc += sign*step;
+            sign = sign * (num==0?1:-1);
+        }
+        return acc;
+    }
+    
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		// your code goes here
+		int n;
+		Scanner sc = new Scanner(System.in);
+		n = sc.nextInt();
+		System.out.println(solve(n));
+	}
+}
+
+Q2.) https://www.geeksforgeeks.org/largest-area-possible-after-removal-of-a-series-of-horizontal-vertical-bars/
+Soln:
+class Codechef
+{
+    public static int solve(int n,int m,int h[],int v[]){
+        HashSet<Integer>H = new HashSet<Integer>();
+        HashSet<Integer>V = new HashSet<Integer>();
+        
+        for(int i=1;i<=n+1;i++){
+            H.add(i);
+        }
+        
+        for(int i=1;i<=m+1;i++){
+            V.add(i);
+        }
+        
+        for(int i=0;i<h.length;i++){
+            H.remove(h[i]);
+        }
+        
+        for(int i=0;i<v.length;i++){
+            V.remove(v[i]);
+        }
+        
+        List<Integer>HLis = new ArrayList<Integer>(H);
+        List<Integer>VLis = new ArrayList<Integer>(V);
+        
+        Collections.sort(HLis);
+        Collections.sort(VLis);
+        
+        int maxH=0,maxV=0,p1=0,p2=0;
+        for(int i=0;i<HLis.size();i++){
+            maxH = Math.max(maxH,HLis.get(i)-p1);
+            p1 = HLis.get(i);
+        }
+        for(int i=0;i<VLis.size();i++){
+            maxV = Math.max(maxH,VLis.get(i)-p2);
+            p2 = VLis.get(i);
+        }
+        
+        return maxH*maxV;
+    }
+    
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		// your code goes here
+		int n=5;
+		int m=5;
+		int[] h = {2,3};
+		int[] v = {2,3}; 
+		System.out.println(solve(n,m,h,v));
+	}
+}
+
+Q3.) https://leetcode.com/discuss/interview-question/221639/
